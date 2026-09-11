@@ -24,13 +24,13 @@ PlayNow has been growing steadily in sign-ups, but the Head of Retention has a m
 | Retention Rate | % of an initial cohort still `active_flag = 1` at each month_index |
 | Avg. Watch Minutes (gap) | % difference in average watch minutes, churned vs. retained |
 | Avg. Sessions (gap) | % difference in average session count, churned vs. retained |
-| Sessions–Watch Time Correlation | Relationship between sessions and watch minutes, by churn status |
+| Sessions-Watch Time Correlation | Relationship between sessions and watch minutes, by churn status |
 | Churn Rate by Segment | % of users churned per month_index, by plan tier / region / cohort |
 
 ## Data & Tools
 
-- **Tools:** Python (pandas, scipy — Welch's t-test, correlation), cohort analysis
-- **Data:** Subscriber-level streaming activity (`stream_retention_churn.csv`) — cohort month, monthly activity, region, plan tier, watch minutes, sessions, churn flag
+- **Tools:** Python (pandas, scipy - Welch's t-test, correlation), cohort analysis
+- **Data:** Subscriber-level streaming activity (`stream_retention_churn.csv`) - cohort month, monthly activity, region, plan tier, watch minutes, sessions, churn flag
 - **Data quality issues found and resolved:**
   - 20 duplicate rows
   - Non-standardized `region` and `plan_tier` values (mixed Thai/English, inconsistent casing)
@@ -43,46 +43,54 @@ PlayNow has been growing steadily in sign-ups, but the Head of Retention has a m
 
 1. Framed the business problem into 3 BQs and broke each into specific, testable AQs
 2. Audited and cleaned the raw data (see data quality issues above), logging every transformation
-3. Built a cohort retention curve (6 cohorts, May–Oct 2025) to answer BQ1
-4. Compared usage behavior (watch minutes, sessions) between churned and retained users — overall, and split by region and plan tier — to answer BQ2
+3. Built a cohort retention curve (6 cohorts, May-Oct 2025) to answer BQ1
+4. Compared usage behavior (watch minutes, sessions) between churned and retained users - overall, and split by region and plan tier - to answer BQ2
 5. Defined risk thresholds from the behavior gap, then quantified churn rate by plan tier, region, and cohort to answer BQ3
-6. Validated the key finding with a Welch's t-test, and backed every chart with a traceable summary table (documented in the proposal's appendix) so results could be audited back to raw counts
+6. Validated the key finding with a Welch's t-test, and backed every chart with a traceable summary table so results could be audited back to raw counts
 7. Worked in 3 team checkpoints: (1) data audit + cleaning + BQ1, (2) BQ2 + BQ3 analysis, (3) synthesis into guardrails, recommendations, and final presentation
 
 ## Key Insight
 
 **Retention drops hardest immediately after sign-up:**
-- Across all 6 cohorts, retention starts at 15–25% in month 1 and falls to just 9–13% by month 2 — the steepest drop in the entire curve
-- Retention then stabilizes through months 2–4 (roughly 6–13%) before an unusual spike to 42–54% at month 5 across all cohorts (worth further investigation — possibly a billing-cycle or re-engagement effect rather than organic retention)
+
+<!-- ![Retention curve by cohort](retention_curve.png) -->
+
+- Across all 6 cohorts, retention starts at 15-25% in month 1 and falls to just 9-13% by month 2 - the steepest drop in the entire curve
+- Retention then stabilizes through months 2-4 (roughly 6-13%) before an unusual spike to 42-54% at month 5 across all cohorts (worth further investigation - possibly a billing-cycle or re-engagement effect rather than organic retention)
 
 **Usage behavior clearly separates churned from retained users:**
-- Retained users have visibly higher average watch minutes and session counts than churned users — low activity is a leading indicator of churn
+
+<!-- ![Watch minutes and sessions by churn status](usage_by_churn_status.png) -->
+
+- Retained users have visibly higher average watch minutes and session counts than churned users - low activity is a leading indicator of churn
 - Risk thresholds identified: **watch minutes < 122 min** and **sessions < 3** per period
 - Sessions and watch minutes are strongly correlated (r = 0.91), so both should be monitored together as a combined engagement signal
 
 **Risk concentrates in specific segments:**
+
+<!-- ![Churn rate by plan tier / region / cohort](churn_rate_by_segment.png) -->
+
 - Highest-risk region: **West**
 - Highest-risk plan tier: **Basic**
 - Highest-risk cohort: **2025-09**
 - Premium-tier users show meaningfully higher engagement than Basic/Standard, even within the churned group
-- **Welch's t-test** on average watch minutes, Basic vs. Premium tier: p < 0.001, reject H0 — the difference is statistically significant, confirming plan tier is a real factor in usage behavior, not noise
-  - ⚠️ *Note: the test's stated direction (H1: Basic > Premium) runs opposite to the descriptive charts, which show Premium engagement higher. Worth double-checking the test setup (e.g., which group was coded as which) before presenting this stat — the "significant difference" finding is solid, but the direction should be confirmed.*
+- **Welch's t-test** on average watch minutes, Basic vs. Premium tier: p < 0.001, reject H0 - the difference is statistically significant, confirming plan tier is a real factor in usage behavior, not noise
+  - Note: the test's stated direction (H1: Basic > Premium) runs opposite to the descriptive charts, which show Premium engagement higher. Worth double-checking the test setup (e.g., which group was coded as which) before presenting this stat - the "significant difference" finding is solid, but the direction should be confirmed against the notebook.
 
 ## Recommendations
 
-1. **Upgrade campaigns for Basic-tier subscribers** showing risk signals — highlight Premium benefits (quality, exclusive content, no ads); consider a rewards/usage-milestone program to build engagement habits
-2. **Region-specific campaigns for West** (and secondarily Central) — investigate local factors (content gaps, competitor promotions, economic factors) before designing localized offers
-3. **Early warning system** — automated triggers when a subscriber's usage drops below the risk thresholds (122 min / 3 sessions), paired with personalized re-engagement messages
+1. **Upgrade campaigns for Basic-tier subscribers** showing risk signals - highlight Premium benefits (quality, exclusive content, no ads); consider a rewards/usage-milestone program to build engagement habits
+2. **Region-specific campaigns for West** (and secondarily Central) - investigate local factors (content gaps, competitor promotions, economic factors) before designing localized offers
+3. **Early warning system** - automated triggers when a subscriber's usage drops below the risk thresholds (122 min / 3 sessions), paired with personalized re-engagement messages
 4. **A/B test retention campaigns** (messaging, offer format, channel) before full rollout, rather than assuming any single intervention will work
 
 ## Risks & Limitations
 
-- Region and plan tier values required heavy standardization (mixed Thai/English, inconsistent casing) — mitigated with a mapping dictionary and pre/post validation, but new unseen variants could still slip through in future data pulls
-- Newer cohorts (e.g., 2025-10) haven't been observed long enough to populate later month_index values — later-month comparisons are only shown for cohorts with enough elapsed time
+- Region and plan tier values required heavy standardization (mixed Thai/English, inconsistent casing) - mitigated with a mapping dictionary and pre/post validation, but new unseen variants could still slip through in future data pulls
+- Newer cohorts (e.g., 2025-10) haven't been observed long enough to populate later month_index values - later-month comparisons are only shown for cohorts with enough elapsed time
 - The month-5 retention spike is not yet explained and should be investigated before being used to inform strategy
 - Findings are based on the observed data window only; no causal claims are made about *why* Basic-tier or West-region users churn more, only that they do
 
 ## Links
 
-- [Capstone proposal (full BQ/AQ, metrics, cleaning plan, checkpoints, appendix)](https://docs.google.com/document/d/17uHUMtKpER54ztvYs_KwKdtZ8DrKjB9hELHHIlCNtuc/edit)
-- [Final presentation](https://docs.google.com/presentation/d/1oteib-A27BTfFOZFels2lqaXeHBVFBX5yFHZHsk-jrA/edit)
+- [Analysis notebook](#) <!-- add Colab/Jupyter notebook link here once available -->
