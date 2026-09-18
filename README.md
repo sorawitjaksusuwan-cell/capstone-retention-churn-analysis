@@ -45,9 +45,30 @@ PlayNow has been growing steadily in sign-ups, but the Head of Retention has a m
 2. Audited and cleaned the raw data (see data quality issues above), logging every transformation
 3. Built a cohort retention curve (6 cohorts, May–Oct 2025) to answer BQ1
 4. Compared usage behavior (watch minutes, sessions) between churned and retained users — overall, and split by region and plan tier — to answer BQ2
-5. Defined risk thresholds from the behavior gap, then quantified churn rate by plan tier, region, and cohort to answer BQ3
-6. Validated the key finding with a Welch's t-test, and backed every chart with a traceable summary table so results could be audited back to raw counts
-7. Worked in 3 team checkpoints: (1) data audit + cleaning + BQ1, (2) BQ2 + BQ3 analysis, (3) synthesis into guardrails, recommendations, and final presentation
+5. Plotted box plots of Watch Minutes and Sessions by cohort month, split by Retained vs. Churned status, to visually compare the two distributions and pick defensible risk thresholds (see **Risk Segmentation Methodology** below)
+6. Used those thresholds to split the original two-group split (Churned / Not Churned) into three: **Churned**, **Nearly Churned**, and **Retained** — then quantified churn and near-churn rate by plan tier, region, and cohort to answer BQ3
+7. Validated the key finding with a Welch's t-test, and backed every chart with a traceable summary table so results could be audited back to raw counts
+8. Worked in 3 team checkpoints: (1) data audit + cleaning + BQ1, (2) BQ2 + BQ3 analysis, (3) synthesis into guardrails, recommendations, and final presentation
+
+## Risk Segmentation Methodology
+
+To move beyond a binary Churned / Not Churned split, box plots of **Watch Minutes** and **Sessions** were drawn per cohort month, separated by churned status, to see where the two distributions diverge and where a defensible cutoff sits.
+
+![Retention curve by cohort](retention_curve.png)
+
+- **Watch Minutes threshold — 122 minutes.** Taken from the churned group's lower-bound (Q1) value in each cohort's box plot; the **largest** of these lower-bound values across all six cohorts was chosen, so the threshold stays conservative rather than over-flagging low-cohort noise.
+
+![Watch minutes and sessions by churn status](watch_sessions_by_churn_status.png)
+
+- **Sessions threshold — 3 sessions.** Taken the same way from the churned group's session-count box plots, using the **smallest** value observed across cohorts, keeping the session cutoff conservative in the other direction.
+
+Applying both thresholds to the previously-retained population splits it further:
+
+1. **Churned** — subscriber has already cancelled
+2. **Nearly Churned** — still active, but watch minutes < 122 min **and** sessions < 3 in the period (the at-risk group these thresholds exist to catch)
+3. **Retained** — active and above both thresholds
+
+This three-way split is what feeds the region/plan-tier risk shares reported below and the early-warning recommendation.
 
 ## Key Insight
 
