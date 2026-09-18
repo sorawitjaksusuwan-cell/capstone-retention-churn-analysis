@@ -54,11 +54,11 @@ PlayNow has been growing steadily in sign-ups, but the Head of Retention has a m
 
 To move beyond a binary Churned / Not Churned split, box plots of **Watch Minutes** and **Sessions** were drawn per cohort month, separated by churned status, to see where the two distributions diverge and where a defensible cutoff sits.
 
-![Retention curve by cohort](retention_curve.png)
+![Watch Minutes Boxplot](boxplot_watch,inutes.png)
 
 - **Watch Minutes threshold — 122 minutes.** Taken from the churned group's lower-bound (Q1) value in each cohort's box plot; the **largest** of these lower-bound values across all six cohorts was chosen, so the threshold stays conservative rather than over-flagging low-cohort noise.
 
-![Watch minutes and sessions by churn status](watch_sessions_by_churn_status.png)
+![Sessions Boxplot](boxplot_sessions.png)
 
 - **Sessions threshold — 3 sessions.** Taken the same way from the churned group's session-count box plots, using the **smallest** value observed across cohorts, keeping the session cutoff conservative in the other direction.
 
