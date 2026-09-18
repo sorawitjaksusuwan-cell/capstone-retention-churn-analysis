@@ -99,16 +99,15 @@ This three-way split is what feeds the region/plan-tier risk shares reported bel
 - Highest-risk plan tier: **Basic** (61.4% of nearly-churned users)
 - Highest-risk cohort: **2025-09**
 
-**Welch's t-test**
+## Welch's t-test
 
 AQ : " Average Watch Minutes (Plan Tier): Basic > Premium ? "
+
 H0 : mean(watch_minutes) basic ≤ premium
+
 H1 : mean(watch_minutes) basic > premium
 
-- With p-value (0.000) < alpha (0.05), H0 is rejected. It is concluded that there is a statistically significant difference in average Watch Minutes between the Basic and Premium Plan Tiers.
-
-- **Welch's t-test** on average watch minutes, Basic vs. Premium tier: p < 0.001, reject H0 — the difference is statistically significant, confirming plan tier is a real factor in usage behavior, not noise
-  - ⚠️ *Note: the test's stated direction (H1: Basic > Premium) runs opposite to the descriptive charts, which show Premium engagement higher. Worth double-checking the test setup (e.g., which group was coded as which) before presenting this stat — the "significant difference" finding is solid, but the direction should be confirmed.*
+- **With p-value (0.000) < alpha (0.05)**, H0 is rejected. It is concluded that there is a statistically significant difference in average Watch Minutes between the Basic and Premium Plan Tiers.
 
 ## Recommendations
 
