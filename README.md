@@ -93,7 +93,10 @@ This three-way split is what feeds the region/plan-tier risk shares reported bel
 **Risk concentrates in specific segments:**
 
 ![Churn risk by region](churn_risk_by_region.png)
+
 ![Churn risk by plan tier](churn_risk_by_plan_tier.png)
+
+![Churn risk by cohort](nearly_churned_cohort.png)
 
 - Highest-risk region: **West** (25.4% of nearly-churned users)
 - Highest-risk plan tier: **Basic** (61.4% of nearly-churned users)
